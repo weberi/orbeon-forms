@@ -177,6 +177,17 @@
                        origin="xxforms:call-xpl('oxf:/forms/orbeon/builder/form/deannotate.xpl', 'data', instance('fb-form-instance'), 'data')"/>
     </xforms:action>
 
+    <!-- Update attachment URLs, if any, after saving -->
+    <xforms:action ev:event="fr-data-save-done">
+        <xforms:action iterate="event('before-urls')">
+            <xforms:var name="p" value="position()"/>
+            <xforms:var name="before" value="."/>
+            <xforms:var name="after" value="event('after-urls')[$p]"/>
+
+            <xforms:setvalue ref="instance('fb-form-instance')/root()//(*[not(*)] | @*)[normalize-space() = $before]" value="$after"/>
+        </xforms:action>
+    </xforms:action>
+
     <!-- Form is ready -->
     <xforms:action ev:event="xforms-ready">
         <!-- Open form settings if mode is "new" -->

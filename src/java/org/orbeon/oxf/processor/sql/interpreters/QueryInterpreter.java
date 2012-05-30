@@ -24,7 +24,7 @@ import org.orbeon.oxf.common.ValidationException;
 import org.orbeon.oxf.processor.sql.SQLProcessor;
 import org.orbeon.oxf.processor.sql.SQLProcessorInterpreterContext;
 import org.orbeon.oxf.util.Base64XMLReceiver;
-import org.orbeon.oxf.util.ISODateUtils;
+import org.orbeon.oxf.util.DateUtils;
 import org.orbeon.oxf.util.NetUtils;
 import org.orbeon.oxf.xml.XMLConstants;
 import org.orbeon.oxf.xml.XPathContentHandler;
@@ -55,7 +55,7 @@ public class QueryInterpreter extends SQLProcessor.InterpreterContentHandler {
 
     private int type;
 
-    private StringBuffer query;
+    private StringBuilder query;
     private List queryParameters;
     private boolean hasReplaceOrSeparator;
     private Iterator nodeIterator;
@@ -68,7 +68,7 @@ public class QueryInterpreter extends SQLProcessor.InterpreterContentHandler {
 
     public void characters(char[] chars, int start, int length) throws SAXException {
         if (query == null)
-            query = new StringBuffer();
+            query = new StringBuilder();
         query.append(chars, start, length);
     }
 
@@ -77,7 +77,7 @@ public class QueryInterpreter extends SQLProcessor.InterpreterContentHandler {
         if (SQLProcessor.SQL_NAMESPACE_URI.equals(uri)) {
             if (localname.equals("param") || localname.equals("parameter")) {
                 if (query == null)
-                    query = new StringBuffer();
+                    query = new StringBuilder();
                 // Add parameter information
                 String direction = attributes.getValue("direction");
                 String type = attributes.getValue("type");
@@ -234,9 +234,9 @@ public class QueryInterpreter extends SQLProcessor.InterpreterContentHandler {
                     getInterpreterContext().pushFunctions(functions);
 
                     // Replace inline parameters
-                    StringBuffer replacedQuery = query;
+                    StringBuilder replacedQuery = query;
                     if (hasReplaceOrSeparator) {
-                        replacedQuery = new StringBuffer();
+                        replacedQuery = new StringBuilder();
                         String queryString = query.toString();
                         int firstIndex = 0;
                         for (Iterator i = queryParameters.iterator(); i.hasNext();) {
@@ -534,14 +534,14 @@ public class QueryInterpreter extends SQLProcessor.InterpreterContentHandler {
                                                 if (stringValue == null) {
                                                     stmt.setNull(index, Types.DATE);
                                                 } else {
-                                                    java.sql.Date date = new java.sql.Date(ISODateUtils.parseDate(stringValue).getTime());
+                                                    java.sql.Date date = new java.sql.Date(DateUtils.parse(stringValue));
                                                     stmt.setDate(index, date);
                                                 }
                                             } else if (Dom4jUtils.qNameToExplodedQName(XMLConstants.XS_DATETIME_QNAME).equals(xmlType)) {
                                                 if (stringValue == null) {
                                                     stmt.setNull(index, Types.TIMESTAMP);
                                                 } else {
-                                                    java.sql.Timestamp timestamp = new java.sql.Timestamp(ISODateUtils.parseDate(stringValue).getTime());
+                                                    java.sql.Timestamp timestamp = new java.sql.Timestamp(DateUtils.parse(stringValue));
                                                     stmt.setTimestamp(index, timestamp);
                                                 }
                                             } else if (Dom4jUtils.qNameToExplodedQName(XMLConstants.XS_BOOLEAN_QNAME).equals(xmlType)) {

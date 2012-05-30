@@ -94,7 +94,6 @@ public class NetUtils {
      */
     public static String getHeader(Map<String, String[]> headers, String name) {
         final String[] results = headers.get(name);
-        final String overrideContainer;
         if (results == null || results.length < 1)
             return null;
         else
@@ -552,7 +551,7 @@ public class NetUtils {
     }
 
     public static String headersToString(HttpServletRequest request) {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         for (Enumeration e = request.getHeaderNames(); e.hasMoreElements();) {
             final String name = (String) e.nextElement();
             sb.append(name);

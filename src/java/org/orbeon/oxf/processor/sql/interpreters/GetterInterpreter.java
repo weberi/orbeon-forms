@@ -18,7 +18,7 @@ import org.orbeon.oxf.common.ValidationException;
 import org.orbeon.oxf.processor.sql.SQLProcessor;
 import org.orbeon.oxf.processor.sql.SQLProcessorInterpreterContext;
 import org.orbeon.oxf.properties.PropertySet;
-import org.orbeon.oxf.util.ISODateUtils;
+import org.orbeon.oxf.util.DateUtils;
 import org.orbeon.oxf.xml.TransformerUtils;
 import org.orbeon.oxf.xml.XMLConstants;
 import org.orbeon.oxf.xml.XMLUtils;
@@ -51,7 +51,7 @@ public class GetterInterpreter extends SQLProcessor.InterpreterContentHandler {
     private String getColumnsPrefix;
     private boolean getColumnsAllElements;
     private boolean inExclude;
-    private StringBuffer getColumnsCurrentExclude;
+    private StringBuilder getColumnsCurrentExclude;
     private Map getColumnsExcludes;
 
     public GetterInterpreter(SQLProcessorInterpreterContext interpreterContext) {
@@ -262,7 +262,7 @@ public class GetterInterpreter extends SQLProcessor.InterpreterContentHandler {
             // Collect excludes
             if (getColumnsExcludes == null)
                 getColumnsExcludes = new HashMap();
-            getColumnsCurrentExclude = new StringBuffer();
+            getColumnsCurrentExclude = new StringBuilder();
             inExclude = true;
         }
     }
@@ -456,11 +456,11 @@ public class GetterInterpreter extends SQLProcessor.InterpreterContentHandler {
         if (columnType == Types.DATE) {
             final Date value = resultSet.getDate(columnIndex);
             if (value != null)
-                stringValue = ISODateUtils.formatDate(value, ISODateUtils.XS_DATE);
+                stringValue = DateUtils.format(value.getTime(), DateUtils.XsDate());
         } else if (columnType == Types.TIMESTAMP) {
             final Timestamp value = resultSet.getTimestamp(columnIndex);
             if (value != null)
-                stringValue = ISODateUtils.formatDate(value, ISODateUtils.XS_DATE_TIME_LONG);
+                stringValue = DateUtils.format(value.getTime(), DateUtils.XsDateTimeLong());
         } else if (columnType == Types.DECIMAL
                 || columnType == Types.NUMERIC) {
             final BigDecimal value = resultSet.getBigDecimal(columnIndex);
