@@ -301,7 +301,10 @@ a.xforms-help-image .fb-control-help { vertical-align: baseline; }
 .fr-editable .fr-grid-tr { height: 60px }   /* Enough space to hold row icons so that hovering doesn't cause the row to expand */
 .fr-grid.fr-editable.fr-norepeat:hover .fr-grid-td { border: 1px solid #ccc} /* Only for grid which is not a repeat, e.g. no highlighting in itemset editor */
 
-.fb-grid-cell-icons, .fb-grid-control-icons, .fb-grid-row-icons { display: block; width: 16px; min-height: 4em; height: auto !important; height: 4em; text-align: center }/* IE HACK for min-height */
+.fb-grid-cell-icons, .fb-grid-control-icons, .fb-grid-row-icons {
+    display: block; width: 16px;
+    height: 60px;
+    text-align: center }
 
 /* Grid icons and hovering */
 .fb-grid-top-left-td { text-align: center; width: 24px }
